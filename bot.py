@@ -503,13 +503,6 @@ def fetch_article(url):
 
 def build_message(article):
 
-    title = clean_text(
-        article.get(
-            "title",
-            ""
-        )
-    )
-
     description = clean_text(
         article.get(
             "description",
@@ -517,81 +510,33 @@ def build_message(article):
         )
     )
 
-    url = article.get(
-        "url",
-        ""
-    )
-
-    # HTML escaping
-    title = (
-        title
-        .replace("&", "&amp;")
-        .replace("<", "&lt;")
-        .replace(">", "&gt;")
-    )
-
-    description = (
+    description = re.sub(
+        r"<[^>]+>",
+        "",
         description
-        .replace("&", "&amp;")
-        .replace("<", "&lt;")
-        .replace(">", "&gt;")
     )
 
-    lines = []
+    description = re.sub(
+        r"\s+",
+        " ",
+        description
+    ).strip()
 
-    if title:
-
-        lines.append(
-            f"📰 <b>{title}</b>"
+    if len(description) > 500:
+        description = (
+            description[:500]
+            .rsplit(" ", 1)[0]
+            + "..."
         )
 
-    if description:
+    if not description:
+        description = "خبر جدید منتشر شد."
 
-        if len(description) > 1200:
-
-            description = (
-                description[:1200]
-                .rstrip()
-                + "..."
-            )
-
-        lines.append("")
-        lines.append(
-            description
-        )
-
-    if url:
-
-        safe_url = (
-            url
-            .replace("&", "&amp;")
-            .replace('"', "%22")
-        )
-
-        lines.append("")
-        lines.append(
-            f'🔗 <a href="{safe_url}">'
-            "مشاهده خبر اصلی"
-            "</a>"
-        )
-
-    lines.append("")
-    lines.append(
-        SIGNATURE
+    message = (
+        description
+        + "\\n\\n"
+        + "📢 @ByteTunnelnews"
     )
-
-    message = "\n".join(
-        lines
-    )
-
-    if len(message) > 4096:
-
-        message = (
-            message[:4050]
-            .rstrip()
-            + "\n\n"
-            + SIGNATURE
-        )
 
     return message
 
