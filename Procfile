@@ -1,1 +1,1 @@
-web: python railway_test.py
+worker: python bot.py
