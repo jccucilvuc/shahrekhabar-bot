@@ -534,7 +534,7 @@ def build_message(article):
 
     message = (
         description
-        + "\\n\\n"
+        + "\n\n"
         + "📢 @ByteTunnelnews"
     )
 
