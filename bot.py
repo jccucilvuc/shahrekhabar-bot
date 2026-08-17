@@ -218,7 +218,7 @@ def get_news_id(url):
 
 def fetch_homepage():
 
-    for attempt in range(1, 4):
+    for attempt in range(1, 6):
 
         try:
 
@@ -229,7 +229,7 @@ def fetch_homepage():
 
             response = session.get(
                 SITE_URL,
-                timeout=(20, 60)
+                timeout=(10, 25)
             )
 
             response.raise_for_status()
@@ -253,7 +253,7 @@ def fetch_homepage():
                 e
             )
 
-            if attempt < 3:
+            if attempt < 5:
                 time.sleep(5)
 
     return None
